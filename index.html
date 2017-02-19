@@ -1,8 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <title>6502 assembler/simulator</title>
+    <title>6502 Simulator</title>
   </head>
   <body>
 
@@ -14,21 +14,43 @@
         <input type="button" value="Hexdump" class="hexdumpButton" />
         <input type="button" value="Disassemble" class="disassembleButton" />
         <input type="button" value="Notes" class="notesButton" />
+        <input type="button" value="Save" class="saveButton" />
+        <input type="button" value="Load" class="loadButton" />
+        <select id="saveSlot">
+        	<option value="1">Slot 1</option>
+        	<option value="2">Slot 2</option>
+        	<option value="3">Slot 3</option>
+        	<option value="4">Slot 4</option>
+        	<option value="5">Slot 5</option>
+        </select>
       </div>
+      <div id='statusBar' style="text-align: center;" hidden></div>
 
-      <textarea class="code"></textarea>
+      <table>
+      	<tr>
+      		<td>
+      			<textarea class="lineNumbers" readOnly></textarea>
+      		</td>
+      		<td>
+      			<textarea class="code" spellcheck="false"></textarea>
+      		</td>
+      		<td>
+      			<canvas class="screen" width="160" height="160"></canvas>
 
-      <canvas class="screen" width="160" height="160"></canvas>
+      			<div class="debugger">
+      			  <input type="checkbox" class="debug" name="debug" />
+      			  <label for="debug">Debugger</label>
+      			  <div class="minidebugger"></div>
+      			  <div class="buttons">
+      			    <input type="button" value="Step" class="stepButton" />
+      			    <input type="button" value="Jump to ..." class="gotoButton" />
+      			  </div>
+      			</div>
+      		</td>
+      	</tr>
+      </table>
 
-      <div class="debugger">
-        <input type="checkbox" class="debug" name="debug" />
-        <label for="debug">Debugger</label>
-        <div class="minidebugger"></div>
-        <div class="buttons">
-          <input type="button" value="Step" class="stepButton" />
-          <input type="button" value="Jump to ..." class="gotoButton" />
-        </div>
-      </div>
+      
 
       <div class="monitorControls">
         <label for="monitoring">Monitor</label>
@@ -43,6 +65,7 @@
       <div class="messages"><pre><code></code></pre></div>
 
       <div class="notes" style="display: none">Notes:
+<a href="http://www.obelisk.me.uk/6502/reference.html" target="_blank">Instruction Reference</a>
 
 Memory location $fe contains a new random byte on every instruction.
 Memory location $ff contains the ascii code of the last key pressed.
