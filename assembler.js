@@ -55,7 +55,7 @@ function SimulatorWidget(node) {
 	$node.find('.notesButton').click(ui.showNotes);
 	$node.find('.code').keypress(simulator.stop);
 	$node.find('.code').keypress(ui.initialize);
-	$node.find('.code').keydown(tabHandler);
+	$node.find('.code').keydown(keyHandler);
 	$node.find('.code').scroll(lineNumbersScroll);
 	$(document).keypress(memory.storeKeypress);
 	$node.find('.saveButton').click(save);
@@ -84,6 +84,7 @@ function SimulatorWidget(node) {
 			}
 		}
 		addLineNumber(lines);
+		lineNumbersScroll();
 	}
 
 	function lineNumbersScroll(){
@@ -136,7 +137,7 @@ function SimulatorWidget(node) {
 		setTimeout(addLineNumberCheck, 10);
 	}
 
-	function tabHandler(event){
+	function keyHandler(event){
 		if (event.keyCode == 9){
 			event.preventDefault();
 			var text = $node.find('.code').val();
@@ -221,14 +222,10 @@ function SimulatorWidget(node) {
 				
 			}
 		}else if (event.keyCode == 13){
-			event.preventDefault();
-			var spaces = "\n";
 			var text = $node.find('.code').val();
 			var selectionStart = $node.find('.code')[0].selectionStart;
-			var shouldScroll = false;
-			if (selectionStart == text.length)
-				shouldScroll = true;
 			var pos = selectionStart;
+			var spaces = "";
 			while (pos >= 0){
 				pos--;
 				if (text.charAt(pos) == '\n')
@@ -241,14 +238,16 @@ function SimulatorWidget(node) {
 				else
 					break;
 			}
-			text = text.slice(0, selectionStart)+spaces+text.slice(selectionStart);
-			$node.find('.code').val(text);
-			$node.find('.code')[0].selectionStart = selectionStart+spaces.length;
-			$node.find('.code')[0].selectionEnd = selectionStart+spaces.length;
-			if (shouldScroll)
-				$node.find('.code')[0].scrollTop += 15;
+			setTimeout(function(){
+				selectionStart = $node.find('.code')[0].selectionStart;
+				text = $node.find('.code').val();
+				text = text.slice(0, selectionStart)+spaces+text.slice(selectionStart);
+				$node.find('.code').val(text);
+				$node.find('.code')[0].selectionStart = selectionStart+spaces.length;
+				$node.find('.code')[0].selectionEnd = selectionStart+spaces.length;
+			}, 10);
 		}
-		setTimeout(addLineNumberCheck, 10);
+		setTimeout(addLineNumberCheck, 25);
 	}
 
 	function stripText() {
