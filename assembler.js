@@ -135,6 +135,7 @@ function SimulatorWidget(node) {
 			$node.find("#statusBar").attr("hidden", true);
 		}, 1500);
 		setTimeout(addLineNumberCheck, 10);
+		ui.initialize();
 	}
 
 	function keyHandler(event){
@@ -1850,7 +1851,7 @@ function SimulatorWidget(node) {
 	function indexLines(lines, symbols) {
 		for (var i = 0; i < lines.length; i++) {
 		if (!indexLine(lines[i], symbols)) {
-			message("**Label already defined at line " + (i + 1) + ":** " + lines[i]);
+			message("**Label already defined at <a href='javascript:goToLine("+(i+1)+");'>line " + (i + 1) + "</a>:** " + lines[i]);
 			return false;
 		}
 		}
@@ -2058,7 +2059,7 @@ function SimulatorWidget(node) {
 		memory.set(defaultCodePC, 0x00); //set a null byte at the end of the code
 		} else {
 		var str = lines[i].replace("<", "&lt;").replace(">", "&gt;");
-		message("**Syntax error line " + (i + 1) + ": " + str + "**");
+		message("**Syntax error <a href='javascript:goToLine("+(i+1)+");'>line " + (i + 1) + "</a>: " + str + "**");
 		ui.initialize();
 		return false;
 		}
@@ -2768,6 +2769,22 @@ function SimulatorWidget(node) {
 	}
 
 	initialize();
+}
+
+function goToLine(line){
+	var text = $('.code').val();
+	var pos = 0;
+	var lineCount = 0;
+	while (pos < text.length){
+		pos++;
+		if (text.charAt(pos) == '\n')
+			lineCount++;
+		if (lineCount == line)
+			break;
+	}
+	if (lineCount > 10)
+		lineCount -= 10;
+	$('.code')[0].scrollTop = 15*lineCount;
 }
 
 $(document).ready(function () {
